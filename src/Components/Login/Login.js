@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import logo from './../../logo.svg';
 import './../../App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import DeveloperDashBoard from "../Dashboards/DeveloperDashBoard";
 
 const {app} = window.require('electron').remote;
@@ -37,17 +38,28 @@ class Login extends Component {
         if(this.state.user == null) {
             return (
                 <div className="App">
-                    <div className="App-header">
-                        <img src={logo} className="App-logo" alt="logo"/>
-                        <h2>Este es el Login = <span role="img" aria-label="love">😍</span></h2>
-                    </div>
-                    <label>Dirección de email
-                        <input type="text" placeholder="alumno@openwebinars.net" className="the_email" />
-                    </label>
-                    <label>Contraseña
-                        <input type="password" aria-describedby="@elmejoralumn#89" className="the_pass" />
-                    </label>
-                    <button className='button expanded hollow secondary' onClick={this.logUser}>Iniciar sesión con usuario y contraseña</button>
+                    <form className="px-4 py-3">
+                        <div className="form-group">
+                            <label htmlFor="exampleDropdownFormEmail1">Email address</label>
+                            <input type="email" className="form-control" id="exampleDropdownFormEmail1"
+                                   placeholder="email@example.com" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="exampleDropdownFormPassword1">Password</label>
+                            <input type="password" className="form-control" id="exampleDropdownFormPassword1"
+                                   placeholder="Password" />
+                        </div>
+                        <div className="form-check">
+                            <input type="checkbox" className="form-check-input" id="dropdownCheck"/>
+                                <label className="form-check-label" htmlFor="dropdownCheck">
+                                    Remember me
+                                </label>
+                        </div>
+                        <button type="submit" className="btn btn-primary" onClick={this.logUser}>Sign in</button>
+                    </form>
+                    <div className="dropdown-divider"></div>
+                    <a className="dropdown-item" href="#">New around here? Sign up</a>
+                    <a className="dropdown-item" href="#">Forgot password?</a>
                 </div>
             );
         } else {

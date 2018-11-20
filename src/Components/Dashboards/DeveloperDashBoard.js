@@ -20,6 +20,7 @@ class DeveloperDashBoard extends Component {
     }
 
     render() {
+        console.log("log: "+this.state);
         if(this.state.user != null) {
             return (
                 <div className="App">
@@ -35,7 +36,7 @@ class DeveloperDashBoard extends Component {
             );
         } else {
             return (
-                <h2>No estamos Logueados</h2>
+                <h2>No estamos Logueados2</h2>
             );
         }
     }
