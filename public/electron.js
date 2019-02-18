@@ -1,6 +1,10 @@
 const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+// Storage:
+const os = require('os');
+const storage = require('electron-json-storage');
+storage.setDataPath(os.tmpdir());
 
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -13,7 +17,7 @@ require("update-electron-app")({
 });
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 900, height: 680 });
+  mainWindow = new BrowserWindow({ width: 1000, height: 780 });
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
