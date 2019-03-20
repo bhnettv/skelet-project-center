@@ -42,6 +42,7 @@ class Feature extends Component {
         event.preventDefault();
 
         const feature_name = event.target.name.value;
+        const feature_description = event.target.description.value;
 
         this.setState({ loading:true });
 
@@ -51,6 +52,7 @@ class Feature extends Component {
             +'&token='+getUserToken()
             +'&project='+this.props.project_key
             +'&name='+feature_name
+            +'&description='+feature_description
         ).then(response => this.prepareResponse(response))
     };
 
@@ -107,7 +109,7 @@ class Feature extends Component {
                                         placeholder="feature name" />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="exampleDropdownFormPassword1">Descripcion</label>
+                                    <label htmlFor="exampleDropdownFormPassword1">Descripción</label>
                                     <textarea
                                         name="description"
                                         rows="5"

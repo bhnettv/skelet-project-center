@@ -22,7 +22,6 @@ class HeaderBar extends Component {
         this.setState({ user:userData })
     }
 
-
     loadProjectList()
     {
         this.props.parent.loadComponent1(
@@ -42,6 +41,13 @@ class HeaderBar extends Component {
             return (
                 <span className="text-warning">
                       <i className="fa fa-spinner fa-download" /> downloading...
+                  </span>
+            );
+
+        } else if (this.props.sync_status =='sftp_connecting') {
+            return (
+                <span className="text-warning">
+                      <i className="fa fa-spinner fa-download" /> connecting...
                   </span>
             );
 
@@ -74,24 +80,6 @@ class HeaderBar extends Component {
                                     Proyectos <span className="sr-only">(current)</span>
                                 </a>
                             </li>
-                            {/*<li className="nav-item">*/}
-                                {/*<a className="nav-link" href="#">Link</a>*/}
-                            {/*</li>*/}
-                            {/*<li className="nav-item dropdown">*/}
-                                {/*<a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"*/}
-                                   {/*data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
-                                    {/*Dropdown*/}
-                                {/*</a>*/}
-                                {/*<div className="dropdown-menu" aria-labelledby="navbarDropdown">*/}
-                                    {/*<a className="dropdown-item" href="#">Action</a>*/}
-                                    {/*<a className="dropdown-item" href="#">Another action</a>*/}
-                                    {/*<div className="dropdown-divider"></div>*/}
-                                    {/*<a className="dropdown-item" href="#">Something else here</a>*/}
-                                {/*</div>*/}
-                            {/*</li>*/}
-                            {/*<li className="nav-item">*/}
-                                {/*<a className="nav-link disabled" href="#">Disabled</a>*/}
-                            {/*</li>*/}
                         </ul>
                         <span className="mr-2">{this.syncShowStatus()}</span>
                         <form className="form-inline my-2 my-lg-0">

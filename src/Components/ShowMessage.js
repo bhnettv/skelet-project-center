@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ShowMessage = () => (
+const ShowMessage = (props) => (
     <span>
-        <i className="fa fa-spinner fa-spin" /> Loading...
+        <i className="fa fa-spinner fa-spin" /> {props.msg ? props.msg :"Cargando..."}
     </span>
 );
 

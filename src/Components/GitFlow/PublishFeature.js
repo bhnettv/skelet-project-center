@@ -74,7 +74,7 @@ class PublishFeature extends Component {
             this.backToProjectDetails();
 
             return (
-                <h1> Caracteristica Publicada!</h1>
+                <h1> Característica Publicada!</h1>
             );
 
         } else {
@@ -82,7 +82,7 @@ class PublishFeature extends Component {
             return (
                 // Go to Login
                 <div className="App App-login">
-                    <h3>Publicando Caracteristica <br />
+                    <h3>Publicando Característica <br />
                         <span className="text-info">{this.props.project_name}</span> / <span className="text-danger">{this.props.branch_name}</span>
                     </h3>
                     <form onSubmit={this.publishFeature}>

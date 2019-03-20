@@ -18,7 +18,8 @@ class SectionsManager extends Component {
             section         : "login",
             section_loading : false,
             component1      : null,
-            user            : null
+            user            : null,
+            sync_get_files  : null,
         };
 
         this.loadSection    = this.loadSection.bind(this);
@@ -56,7 +57,6 @@ class SectionsManager extends Component {
 
     render()
     {
-
         console.log("sync status: "+this.state.sync_status);
 
         const MainHeader = (
@@ -69,13 +69,13 @@ class SectionsManager extends Component {
 
             return (<Loading />);
 
-        } else  if (this.state.section =='login') {
+        } else  if (this.state.section == 'login') {
             return (
                 <div className="App">
                     <Login parent={this} setUser={this.getUser()} />
                 </div>
             );
-        } else if (this.state.section =='dashboard_dev') {
+        } else if (this.state.section == 'dashboard_dev') {
             section = ( <DeveloperDashBoard parent={this} /> );
 
         } else if (this.state.component1 !=null) {
@@ -88,11 +88,10 @@ class SectionsManager extends Component {
                 <div className="App-section p-2 bd-highlight">
                     {section}
                 </div>
-
             </div>
         );
 
-        console.log("logging user: "+this.state.user.name);
+        //console.log("logging user: "+this.state.user.name);
     }
 }
 

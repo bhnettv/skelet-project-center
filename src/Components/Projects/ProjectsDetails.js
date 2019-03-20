@@ -13,6 +13,8 @@ import {syncFromRemoteServer} from "../../Helpers/ProjectLocalInfo";
 import HotFix from "../GitFlow/HotFix";
 import ShowMessage from "../ShowMessage";
 import CommandManager from "../Command/CommandManager";
+import MigrationManager from "../Database/MigrationManager";
+import UnitTestsManager from "../Tests/UnitTestsManager";
 
 class ProjectsDetails extends Component {
 
@@ -27,10 +29,13 @@ class ProjectsDetails extends Component {
         this.createNewFeature         = this.createNewFeature.bind(this);
         this.branchCheckOutOnResponse = this.branchCheckOutOnResponse.bind(this);
         this.createNewHotfix          = this.createNewHotfix.bind(this);
+        this.goToMigrationManager     = this.goToMigrationManager.bind(this);
+        this.goToUnitsTests           = this.goToUnitsTests.bind(this);
         this.refreshProjectDetails    = this.refreshProjectDetails.bind(this);
         this.commandScreenShowStatus  = this.commandScreenShowStatus.bind(this);
         this.commandHandleChange      = this.commandHandleChange.bind(this);
         this.statusBoard              = this.statusBoard.bind(this);
+        this.branchDelete             = this.branchDelete.bind(this);
     }
 
     getProjectGeneralStatus()
@@ -54,6 +59,32 @@ class ProjectsDetails extends Component {
         .then(function (response) {
             return response.json();
         }).then(data => this.branchCheckOutOnResponse(data, branch_name));
+    }
+
+    branchDelete(branch_name)
+    {
+        let parent = this;
+        fetch(configGetHost()+'/api/repo/branch-delete'
+            +'?user='+getUsername()
+            +'&token='+getUserToken()
+            +'&project='+this.props.key1
+            +'&branch='+branch_name
+        )
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (response) {
+            let dataR = response;
+
+            if (dataR.cod === '00')  {
+                parent.getProjectGeneralStatus();
+
+            } else {
+                alert("Error #" +dataR.cod + "\n" + dataR.msg)
+            }
+
+            console.log(dataR.data);
+        });
     }
 
     branchCheckOutOnResponse(response, branch_name)
@@ -91,6 +122,28 @@ class ProjectsDetails extends Component {
         );
     }
 
+    goToMigrationManager()
+    {
+        this.props.parent.loadComponent1(
+            <MigrationManager
+                parent={this.props.parent}
+                project_key={this.props.key1}
+                project_name={this.props.title}
+            />
+        );
+    }
+
+    goToUnitsTests()
+    {
+        this.props.parent.loadComponent1(
+            <UnitTestsManager
+                parent={this.props.parent}
+                project_key={this.props.key1}
+                project_name={this.props.title}
+            />
+        );
+    }
+
     preparePublishFeature(branch_name)
     {
         this.props.parent.loadComponent1(
@@ -107,26 +160,34 @@ class ProjectsDetails extends Component {
     {
         let buttons;
         let button_checkout = (
-            <button type="button" className="btn btn-sm" title="Entrar a esta rama."
+            <button type="button" className="btn btn-sm ml-1" title="Entrar a esta rama."
                     onClick={()=>this.branchCheckOut(branch_name)}>
                 <i className="fa fa-arrow-circle-down"></i>
             </button>
         );
 
-        if (branch_name == this.state.project_status.current_branch)  {
+        let button_delete_branch = (
+            <button type="button" className="btn btn-sm btn-danger ml-1" title="Eliminar esta rama."
+                    onClick={()=>this.branchDelete(branch_name)}>
+                <i className="fa fa-remove"></i>
+            </button>
+        );
+
+        if (branch_name === this.state.project_status.current_branch)  {
             buttons =(
-                <div>
+                <div className="text-right">
                     {button_checkout}
-                    <button type="button" className="btn btn-info btn-sm" title="Publicar caracteristica."
+                    {button_delete_branch}
+                    <button type="button" className="btn btn-info btn-sm ml-1" title="Publicar característica."
                             onClick={()=>this.preparePublishFeature(branch_name)}>
-                        <i className="fa fa-check-circle"></i>
+                        <i className="fa fa-check-circle"></i> Enviar
                     </button>
                 </div>
             );
         } else {
             buttons =(
-                <div>
-                    {button_checkout}
+                <div className="text-right">
+                    {button_checkout} {button_delete_branch}
                 </div>
             );
         }
@@ -163,12 +224,12 @@ class ProjectsDetails extends Component {
                         <div className="card-body text-dark">
                             <table className="table table-hover">
                                 <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Tipo</th>
-                                    <th scope="col"></th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 {branches.map((branch) => (
@@ -186,7 +247,6 @@ class ProjectsDetails extends Component {
                         </div>
                     </div>
                 </div>
-
             );
         } else {
             return this.commandScreenShowStatus();
@@ -236,12 +296,21 @@ class ProjectsDetails extends Component {
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                         <a className="dropdown-item" href="#"
+                                           onClick={this.goToMigrationManager}>
+                                            <i className="fa fa-database" /> DB / Migraciones.
+                                        </a>
+                                        <a className="dropdown-item" href="#"
+                                           onClick={this.goToUnitsTests}>
+                                            <i className="fa fa-sliders" /> Tests Unitarios.
+                                        </a>
+                                        <hr />
+                                        <a className="dropdown-item" href="#"
                                            onClick={this.createNewFeature}>
-                                            Nuevo (<b>feature</b>).
+                                            <i className="fa fa-code-fork" /> Nuevo (<b>feature</b>).
                                         </a>
                                         <a className="dropdown-item" href="#"
                                            onClick={this.createNewHotfix}>
-                                            Nuevo (<b>hotfix</b>).
+                                            <i className="fa fa-code-fork" /> Nuevo (<b>hotfix</b>).
                                         </a>
                                     </div>
                                 </div>
@@ -257,34 +326,34 @@ class ProjectsDetails extends Component {
 
                     </div>
 
-                    <nav className="navbar navbar-expand-lg navbar-light bg-dark fixed-bottom">
-                        <div className="input-group">
-                            <div className="input-group-append dropup">
-                                <button className="btn btn-outline-secondary dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Dropdown
-                                </button>
-                                <div className="dropdown-menu">
-                                    <a className="dropdown-item" href="#">Action</a>
-                                    <a className="dropdown-item" href="#">Another action</a>
-                                    <a className="dropdown-item" href="#">Something else here</a>
-                                    <div role="separator" className="dropdown-divider"></div>
-                                    <a className="dropdown-item" href="#">Separated link</a>
-                                </div>
-                            </div>
-                            <input
-                                type="text"
-                                className="form-control"
-                                aria-label="Text input with dropdown button"
-                                onKeyPress={this.commandHandleChange}
-                            />
-                        </div>
-                    </nav>
+                    {/*<nav className="navbar navbar-expand-lg navbar-light bg-dark fixed-bottom">*/}
+                        {/*<div className="input-group">*/}
+                            {/*<div className="input-group-append dropup">*/}
+                                {/*<button className="btn btn-outline-secondary dropdown-toggle" type="button"*/}
+                                        {/*data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
+                                    {/*Dropdown*/}
+                                {/*</button>*/}
+                                {/*<div className="dropdown-menu">*/}
+                                    {/*<a className="dropdown-item" href="#">Action</a>*/}
+                                    {/*<a className="dropdown-item" href="#">Another action</a>*/}
+                                    {/*<a className="dropdown-item" href="#">Something else here</a>*/}
+                                    {/*<div role="separator" className="dropdown-divider"></div>*/}
+                                    {/*<a className="dropdown-item" href="#">Separated link</a>*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                            {/*<input*/}
+                                {/*type="text"*/}
+                                {/*className="form-control"*/}
+                                {/*aria-label="Text input with dropdown button"*/}
+                                {/*onKeyPress={this.commandHandleChange}*/}
+                            {/*/>*/}
+                        {/*</div>*/}
+                    {/*</nav>*/}
                 </div>
             );
 
         } else {
-            return ( <ShowMessage />);
+            return ( <ShowMessage msg="Cargando proyectos..." />);
         }
 
     }

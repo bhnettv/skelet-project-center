@@ -18,6 +18,8 @@
     "react-dom": "^16.4.0",
     "reactjs-localstorage": "0.0.7",
     "reactstrap": "^6.5.0",
+    "ssh2": "^0.8.2",
+    "ssh2-sftp-client": "^2.4.3",
     "update-electron-app": "^1.2.0"
   },
   "devDependencies": {

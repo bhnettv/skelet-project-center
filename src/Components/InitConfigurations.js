@@ -3,6 +3,12 @@ import './../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import {reactLocalStorage} from 'reactjs-localstorage';
+import {skeletProjectWorkspacePath} from "../Helpers/LocalConfig";
+
+const electron  = window.require('electron');
+const fs = electron.remote.require('fs');
+const exec = electron.remote.require('child_process').exec;
+
 
 class InitConfigurations extends Component {
 
@@ -22,7 +28,33 @@ class InitConfigurations extends Component {
         };
 
         reactLocalStorage.setObject('config', configData);
+
+        this.verifyAndCreateSkeletWorkspacePath();
     };
+
+    /**
+     *
+     * @param path
+     */
+    async verifyAndCreateSkeletWorkspacePath()
+    {
+        let path = skeletProjectWorkspacePath();
+
+        if (fs.existsSync(path)) {
+            console.info("skeletProjectWorkspacePath / Exist: ")
+        } else {
+            console.warn("skeletProjectWorkspacePath / Not Exist: ");
+
+            // CREATE LOCAL
+            await exec('mkdir '+path,
+                function(error, stdout, stderr) {
+                    if (error !== null) {
+                        console.error('skeletProjectWorkspacePath created: '+path);
+                    } else { }
+                }
+            );
+        }
+    }
 
     render() {
         return (
