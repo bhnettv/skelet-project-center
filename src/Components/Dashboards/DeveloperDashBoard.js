@@ -19,7 +19,7 @@ class DeveloperDashBoard extends Component {
 
     render() {
         const userData = reactLocalStorage.getObject('user.data');
-        if(userData != null) {
+        if(userData !== null) {
             return (
                 <ProjectsManager parent={this.props.parent} />
             );

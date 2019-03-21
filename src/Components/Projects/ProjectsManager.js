@@ -17,7 +17,10 @@ class ProjectsManager extends Component {
     }
 
     fetchFirst() {
-        fetch(configGetHost()+'/api/projects/get?user='+getUsername()+'&token='+getUserToken())
+
+        const userData = reactLocalStorage.getObject('user.data');
+
+        fetch(configGetHost()+'/api/projects/get?user='+userData.username+'&token='+userData.token)
             .then(function (response) {
                 return response.json();
             }).then(data => this.setState({ projects: data.projects }));

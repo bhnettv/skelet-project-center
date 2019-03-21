@@ -7,6 +7,7 @@ import HeaderBar from "./HeaderBar";
 import DeveloperDashBoard from "./Dashboards/DeveloperDashBoard";
 import Login from "./Login/Login";
 import Loading from "./ShowMessage";
+import InitConfigurations from "./InitConfigurations";
 
 class SectionsManager extends Component {
 
@@ -73,6 +74,12 @@ class SectionsManager extends Component {
             return (
                 <div className="App">
                     <Login parent={this} setUser={this.getUser()} />
+                </div>
+            );
+        } else  if (this.state.section == 'config') {
+            return (
+                <div className="App">
+                    <InitConfigurations />
                 </div>
             );
         } else if (this.state.section == 'dashboard_dev') {

@@ -1,10 +1,25 @@
 import {reactLocalStorage} from "reactjs-localstorage";
-const userData = reactLocalStorage.getObject('user.data');
+let userData = reactLocalStorage.getObject('user.data');
 
-export function getUserToken() {
+export function refreshUserData()
+{
+    userData = reactLocalStorage.getObject('user.data');
+    return userData;
+}
+
+export function getUserToken()
+{
+    if (! userData.token) {
+        userData = refreshUserData();
+    }
     return userData.token;
 }
 
-export function getUsername() {
+export function getUsername()
+{
+    if (! userData.username) {
+        userData = refreshUserData();
+    }
+
     return userData.username;
 }

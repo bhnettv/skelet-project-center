@@ -3,31 +3,19 @@ import './../../App.css';
 import './../../css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap';
-import DeveloperDashBoard from "../Dashboards/DeveloperDashBoard";
 import {reactLocalStorage} from 'reactjs-localstorage';
 import InitConfigurations from "../InitConfigurations";
 import axios from 'axios'
 import Notify from 'notifyjs';
 import Loading from "../ShowMessage";
-import SectionsManager from "../SectionsManager";
 import {configGetHost} from "../../Helpers/LocalConfig";
-const config = reactLocalStorage.getObject('config');
-var myNotification = new Notify('Yo dawg!', {
+const electron      = window.require('electron');
+const localStorage  = electron.remote.require('electron-json-storage');
+
+let myNotification  = new Notify('Yo dawg!', {
     body: 'This is an awesome notification',
     //notifyShow: onNotifyShow
 });
-
-// ...
-const electron = window.require('electron');
-const chokidar = electron.remote.require('chokidar');
-
-var watcher = chokidar.watch('./tmp', {ignored: /^\./, persistent: true});
-
-// watcher
-//     .on('add', function(path) {console.log('File', path, 'has been added');})
-//     .on('change', function(path) {console.log('File', path, 'has been changed');})
-//     .on('unlink', function(path) {console.log('File', path, 'has been removed');})
-//     .on('error', function(error) {console.error('Error happened', error);});
 
 class Login extends Component {
 
@@ -40,8 +28,8 @@ class Login extends Component {
     };
 
     // ...
-    prepareLoginResponse(response) {
-
+    prepareLoginResponse(response)
+    {
         if (response.data.cod == '00') {
 
             this.setState({
@@ -65,14 +53,38 @@ class Login extends Component {
         event.preventDefault();
         const user = event.target.username.value;
         const pass = event.target.username.value;
+
+        if (user ==='0000' && pass ==='0000') {
+            this.resetConfigurationInitial();
+            return;
+        }
+
         this.setState({ loading:true });
         axios.get(configGetHost()+'/api/station/login?user='+user+'&pass='+pass)
             .then(response => this.prepareLoginResponse(response))
     };
 
+
+    resetConfigurationInitial()
+    {
+        localStorage.clear();
+        reactLocalStorage.clear();
+        this.props.parent.loadSection('config');
+    }
+
     render() {
 
+        const config = reactLocalStorage.getObject('config');
         // Verify Init-Configurations:
+        localStorage.get('config', function(error, data) {
+            if (error) throw error;
+
+            if (! config.host) {
+                reactLocalStorage.setObject('config', data);
+            }
+
+        });
+
         if(! config.host) {
             return (
                 <div className="App">
@@ -80,7 +92,7 @@ class Login extends Component {
                 </div>
             );
 
-        }else {
+        } else {
 
             return (
                 // Go to Login
